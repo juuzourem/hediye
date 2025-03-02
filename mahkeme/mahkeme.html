@@ -149,6 +149,84 @@
       color: #9b6b9b;
       font-weight: bold;
     }
+    
+    /* Sürpriz mesaj animasyonu için */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Sürpriz Modal Stili */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 15px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 8px 24px rgba(165, 105, 165, 0.3);
+      animation: fadeIn 1s ease-out;
+      position: relative;
+      border-top: 5px solid #e8bce8;
+    }
+    
+    .modal-header {
+      padding: 20px;
+      background-color: #fcf0fc;
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .modal-footer {
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #fcf0fc;
+    }
+    
+    .close-button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #9b6b9b;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border-radius: 50%;
+      padding: 0;
+      transition: background-color 0.3s;
+    }
+    
+    .close-button:hover {
+      background-color: #f6d6f6;
+    }
   </style>
 </head>
 
@@ -198,15 +276,6 @@
       </ul>
     </div>
 
-    <!-- Sürpriz mesaj kutusu, başlangıçta gizli -->
-    <div class="message-card" id="surprise" style="display: none;">
-      <h2>🎉 Sürpriz Mesaj!</h2>
-      <p>Ablam, artık mahkeme günü geride kaldı.</p>
-      <p>Bu zorlu süreci geride bıraktığın için kendini kutlamalısın!!! Sen her şeyin üstesinden gelebilen güçlü bir kızsın!</p>
-      <p>Artık rahatla, kendine olan inancını tazele ve her zaman yanında olan sevdiklerini hatırlayıp mutlu olmaya çalış</p>
-      <p>Tekrardan bu zorlu süreci atlattığın için seni tebrik ediyorum!! Umarım her şey istediğin gibi geçmiştir...</p>
-    </div>
-
     <div class="quote-container">
       <p>"Cesaret, korkuya rağmen devam edebilme yeteneğidir. Her seferinde biraz daha güçlenirsin." - Mary Tyler Moore
       </p>
@@ -217,10 +286,43 @@
     </footer>
   </div>
 
+  <!-- Sürpriz Mesaj Modal -->
+  <div id="surprise-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-button" id="close-modal">×</button>
+      <div class="modal-header">
+        <h2>🎉 Sürpriz Mesaj!</h2>
+      </div>
+      <div class="modal-body">
+      	<p>Ablam, artık mahkeme günü geride kaldı.</p>
+      	<p>Bu zorlu süreci geride bıraktığın için kendini kutlamalısın!!! Sen her şeyin üstesinden gelebilen güçlü bir kızsın!</p>
+      	<p>Artık rahatla, kendine olan inancını tazele ve her zaman yanında olan sevdiklerini hatırlayıp mutlu olmaya çalış</p>
+      	<p>Tekrardan bu zorlu süreci atlattığın için seni tebrik ediyorum!! Umarım her şey istediğin gibi geçmiştir...</p>
+      </div>
+      <div class="modal-footer">
+        <button id="close-modal-btn">Kapat</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Geri sayım için - Türkiye/İstanbul saati ile uyumlu
-    let countdownInterval = setInterval(updateCountdown, 1000);
+    // Modal gösterme fonksiyonu
+    function showSurpriseModal() {
+      const modal = document.getElementById('surprise-modal');
+      modal.classList.add('active');
+    }
     
+    // Modal kapatma fonksiyonu
+    function closeSurpriseModal() {
+      const modal = document.getElementById('surprise-modal');
+      modal.classList.remove('active');
+    }
+    
+    // Kapatma düğmelerini ayarla
+    document.getElementById('close-modal').addEventListener('click', closeSurpriseModal);
+    document.getElementById('close-modal-btn').addEventListener('click', closeSurpriseModal);
+    
+    // Geri sayım kodu - artık aktif
     function updateCountdown() {
       const now = new Date();
       
@@ -239,11 +341,11 @@
       
       const difference = targetDate - now;
       
-      // Geri sayım bittiyse
+      // Eğer zaman dolmuşsa
       if (difference <= 0) {
-        clearInterval(countdownInterval);
         document.getElementById('countdown').innerHTML = "Zaman doldu!";
-        document.getElementById('surprise').style.display = 'block';
+        showSurpriseModal(); // Süre dolduğunda sürpriz mesajını göster
+        clearInterval(countdownInterval); // Geri sayımı durdur
         return;
       }
       
@@ -257,7 +359,9 @@
       document.getElementById('countdown').innerHTML = `${days} gün, ${hours} saat, ${minutes} dakika, ${seconds} saniye`;
     }
     
-    updateCountdown(); // Sayfa yüklendiğinde hemen çalıştır
+    // Sayfa yüklendiğinde sayacı başlat
+    updateCountdown();
+    let countdownInterval = setInterval(updateCountdown, 1000);
 
     // Nefes egzersizi için
     const breathingCircle = document.getElementById('breathing-circle');
