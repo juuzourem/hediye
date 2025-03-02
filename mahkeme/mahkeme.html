@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #fdf6fd;
+      background-color: #f8e6f8; /* Daha doygun bir arka plan rengi */
       margin: 0;
       padding: 0;
       color: #5a4a5a;
@@ -198,6 +198,15 @@
       </ul>
     </div>
 
+    <!-- Sürpriz mesaj kutusu, başlangıçta gizli -->
+    <div class="message-card" id="surprise" style="display: none;">
+      <h2>🎉 Sürpriz Mesaj!</h2>
+      <p>Ablam, artık mahkeme günü geride kaldı.</p>
+      <p>Bu zorlu süreci geride bıraktığın için kendini kutlamalısın!!! Sen her şeyin üstesinden gelebilen güçlü bir kızsın!</p>
+      <p>Artık rahatla, kendine olan inancını tazele ve her zaman yanında olan sevdiklerini hatırlayıp mutlu olmaya çalış</p>
+      <p>Tekrardan bu zorlu süreci atlattığın için seni tebrik ediyorum!! Umarım her şey istediğin gibi geçmiştir...</p>
+    </div>
+
     <div class="quote-container">
       <p>"Cesaret, korkuya rağmen devam edebilme yeteneğidir. Her seferinde biraz daha güçlenirsin." - Mary Tyler Moore
       </p>
@@ -210,25 +219,45 @@
 
   <script>
     // Geri sayım için - Türkiye/İstanbul saati ile uyumlu
+    let countdownInterval = setInterval(updateCountdown, 1000);
+    
     function updateCountdown() {
       const now = new Date();
-      const nextTuesday = new Date();
-      const today = now.getDay();
-      let daysUntilTuesday = (2 - today + 7) % 7;
-      if (daysUntilTuesday === 0) {
-        daysUntilTuesday = 7;
+      
+      // Sonraki Salı günü saat 13:30 için hedef tarih oluştur
+      const targetDate = new Date();
+      const currentDay = now.getDay(); // 0: Pazar, 1: Pazartesi, ... 6: Cumartesi
+      
+      // Kaç gün sonra Salı olacağını hesapla
+      let daysUntilTuesday = (2 - currentDay + 7) % 7;
+      if (daysUntilTuesday === 0 && now.getHours() >= 13 && now.getMinutes() >= 30) {
+        daysUntilTuesday = 7; // Eğer bugün Salı ve saat 13:30'u geçtiyse, bir sonraki Salı'ya ayarla
       }
-      nextTuesday.setDate(now.getDate() + daysUntilTuesday);
-      nextTuesday.setHours(0, 0, 0, 0);
-      const difference = nextTuesday - now;
+      
+      targetDate.setDate(now.getDate() + daysUntilTuesday);
+      targetDate.setHours(13, 30, 0, 0); // Saat 13:30'a ayarla
+      
+      const difference = targetDate - now;
+      
+      // Geri sayım bittiyse
+      if (difference <= 0) {
+        clearInterval(countdownInterval);
+        document.getElementById('countdown').innerHTML = "Zaman doldu!";
+        document.getElementById('surprise').style.display = 'block';
+        return;
+      }
+      
+      // Geri sayım değerlerini hesapla
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      
+      // Geri sayım metni güncelle
       document.getElementById('countdown').innerHTML = `${days} gün, ${hours} saat, ${minutes} dakika, ${seconds} saniye`;
     }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    
+    updateCountdown(); // Sayfa yüklendiğinde hemen çalıştır
 
     // Nefes egzersizi için
     const breathingCircle = document.getElementById('breathing-circle');
@@ -276,7 +305,7 @@
       }, 4000);
     }
 
-    // Olumlu düşünceler için (güncellenmiş)
+    // Olumlu düşünceler için
     const thoughts = [
       "Bu zorlu durum sadece bir gün sürecek ve sonra geçip gidecek",
       "Güçlüsün ve bu durumla başa çıkabilirsin ablam",
