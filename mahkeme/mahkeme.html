@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sude, Sen Güçlüsün! 🦾</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fdf6fd;
+      margin: 0;
+      padding: 0;
+      color: #5a4a5a;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background: linear-gradient(135deg, #f6ecf6 0%, #fce1fc 100%);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(165, 105, 165, 0.1);
+    }
+
+    h1 {
+      color: #9b6b9b;
+      text-align: center;
+      font-size: 32px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .message-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(165, 105, 165, 0.1);
+      transition: transform 0.3s ease;
+      border-top: 3px solid #f6d6f6;
+    }
+
+    .message-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .quote-container {
+      background-color: #fcf0fc;
+      border-left: 5px solid #e8bce8;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+
+    .breathing-exercise {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-color: #f6d6f6;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      transition: transform 8s ease-in-out;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #e8bce8;
+      color: #5a4a5a;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #d6abd6;
+    }
+
+    #thoughts-container {
+      margin-top: 30px;
+    }
+
+    .positive-thought {
+      padding: 12px;
+      background-color: #fcf0fc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      display: none;
+      border-left: 3px solid #e8bce8;
+      transition: opacity 2s ease-out;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #9b6b9b;
+    }
+
+    @keyframes breatheAnimation {
+      0% {
+        transform: scale(1);
+        background-color: #f6d6f6;
+      }
+
+      50% {
+        transform: scale(1.5);
+        background-color: #e8bce8;
+      }
+
+      100% {
+        transform: scale(1);
+        background-color: #f6d6f6;
+      }
+    }
+
+    .countdown {
+      font-size: 24px;
+      text-align: center;
+      margin: 20px 0;
+      color: #9b6b9b;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>🌸 Sude İçin Destek Sayfası 🌸</h1>
+    </header>
+
+    <div class="message-card">
+      <h2>📅 Geri Sayım</h2>
+      <p>Salı gününe kalan süre:</p>
+      <div class="countdown" id="countdown"></div>
+      <p>Ve sonra bu zor gün geride kalmış olacak! Her şey bittiğinde rahatlayacaksın.</p>
+    </div>
+
+    <div class="message-card">
+      <h2>🧘‍♀️ Nefes Egzersizi</h2>
+      <p>Gerginlik hissettiğinde bu nefes egzersizini yapabilirsin:</p>
+      <div class="breathing-exercise">
+        <div class="circle" id="breathing-circle">
+          <span id="breathing-text">Başla</span>
+        </div>
+        <div class="button-container">
+          <button id="start-breathing">Nefes Egzersizini Başlat</button>
+          <button id="stop-breathing">Durdur</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="message-card">
+      <h2>💭 Olumlu Düşünceler</h2>
+      <p>Stres anında kendine hatırlatman gereken şeyler:</p>
+      <button id="show-thought">Olumlu Düşünce Göster</button>
+      <div id="thoughts-container"></div>
+    </div>
+
+    <div class="message-card">
+      <h2>📝 Mahkeme Günü İçin İpuçları</h2>
+      <ul>
+        <li>Mahkemeden önce iyi uyumaya çalış</li>
+        <li>Sabah sakin bir rutinle güne başla</li>
+        <li>Kendini iyi hissettiren bir kıyafet seç</li>
+        <li>Yanında sevdiğin bir eşya taşı</li>
+        <li>Gözlerini kaçırabilir veya farklı bir noktaya odaklanabilirsin</li>
+        <li>Derin nefes almayı unutma</li>
+      </ul>
+    </div>
+
+    <div class="quote-container">
+      <p>"Cesaret, korkuya rağmen devam edebilme yeteneğidir. Her seferinde biraz daha güçlenirsin." - Mary Tyler Moore
+      </p>
+    </div>
+
+    <footer>
+      <p>Bu zor zamanda yanındayım. Her şey geçecek! ❤️</p>
+    </footer>
+  </div>
+
+  <script>
+    // Geri sayım için - Türkiye/İstanbul saati ile uyumlu
+    function updateCountdown() {
+      const now = new Date();
+      const nextTuesday = new Date();
+      const today = now.getDay();
+      let daysUntilTuesday = (2 - today + 7) % 7;
+      if (daysUntilTuesday === 0) {
+        daysUntilTuesday = 7;
+      }
+      nextTuesday.setDate(now.getDate() + daysUntilTuesday);
+      nextTuesday.setHours(0, 0, 0, 0);
+      const difference = nextTuesday - now;
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      document.getElementById('countdown').innerHTML = `${days} gün, ${hours} saat, ${minutes} dakika, ${seconds} saniye`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Nefes egzersizi için
+    const breathingCircle = document.getElementById('breathing-circle');
+    const breathingText = document.getElementById('breathing-text');
+    const startBreathingButton = document.getElementById('start-breathing');
+    const stopBreathingButton = document.getElementById('stop-breathing');
+
+    let breathingInterval;
+    let isBreathing = false;
+
+    startBreathingButton.addEventListener('click', () => {
+      if (!isBreathing) {
+        isBreathing = true;
+        startBreathingExercise();
+      }
+    });
+
+    stopBreathingButton.addEventListener('click', () => {
+      if (isBreathing) {
+        isBreathing = false;
+        clearInterval(breathingInterval);
+        breathingCircle.style.animation = '';
+        breathingText.textContent = 'Başla';
+      }
+    });
+
+    function startBreathingExercise() {
+      let phase = 'inhale';
+      breathingText.textContent = 'Nefes Al';
+      breathingCircle.style.animation = 'breatheAnimation 8s infinite alternate';
+      breathingInterval = setInterval(() => {
+        if (phase === 'inhale') {
+          phase = 'hold';
+          breathingText.textContent = 'Tut';
+          setTimeout(() => {
+            if (isBreathing) {
+              phase = 'exhale';
+              breathingText.textContent = 'Nefes Ver';
+            }
+          }, 4000);
+        } else if (phase === 'exhale') {
+          phase = 'inhale';
+          breathingText.textContent = 'Nefes Al';
+        }
+      }, 4000);
+    }
+
+    // Olumlu düşünceler için (güncellenmiş)
+    const thoughts = [
+      "Bu zorlu durum sadece bir gün sürecek ve sonra geçip gidecek",
+      "Güçlüsün ve bu durumla başa çıkabilirsin ablam",
+      "Her adımda yanında olan dostların (yani biz) varız",
+      "Her zaman yaptığın gibi bu zorlukla da başa çıkabilirsin",
+      "Bu deneyim seni daha da güçlendirecek",
+      "İsmetin amk",
+      "Sen aklına koyduğun herşeyi başarırsın çünkü inanılmaz bir gücün ve sevgin var",
+      "Bu deneyimi atlatınca kendini çok daha iyi hissedeceksin",
+      "Adaletin yerini bulacağına güvenmek umuduyla..."
+    ];
+
+    // Aynı mesajın tekrarını önlemek için bir kopya liste kullanıyoruz.
+    let availableThoughts = [...thoughts];
+
+    const showThoughtButton = document.getElementById('show-thought');
+    const thoughtsContainer = document.getElementById('thoughts-container');
+
+    showThoughtButton.addEventListener('click', () => {
+      // Tüm mesajlar gösterildiyse, listeyi sıfırla.
+      if (availableThoughts.length === 0) {
+        availableThoughts = [...thoughts];
+      }
+      const randomIndex = Math.floor(Math.random() * availableThoughts.length);
+      const thought = availableThoughts.splice(randomIndex, 1)[0];
+
+      const thoughtElement = document.createElement('div');
+      thoughtElement.classList.add('positive-thought');
+      thoughtElement.textContent = thought;
+      thoughtElement.style.display = 'block';
+
+      thoughtsContainer.appendChild(thoughtElement);
+
+      // 5 saniye sonra yavaşça kaybolması için fade-out sınıfı ekle
+      setTimeout(() => {
+        thoughtElement.classList.add('fade-out');
+      }, 3000);
+
+      // Fade-out animasyonu bittikten sonra elementi kaldır
+      setTimeout(() => {
+        thoughtsContainer.removeChild(thoughtElement);
+      }, 5000);
+    });
+  </script>
+</body>
+
+</html>
