@@ -1,425 +1,431 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gün & Gece Döngüsü</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: all 2s ease;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gün & Gece Döngüsü</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all 2s ease;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
-            transition: background 3s ease;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+      transition: background 3s ease;
+    }
 
-        .container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
 
-        .message {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            margin-bottom: 1rem;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 2s ease, transform 2s ease;
-        }
+    .message {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 2s ease, transform 2s ease;
+    }
 
-        .message.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .message.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        .time {
-            font-size: 2rem;
-            color: #fff;
-            text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-            margin-top: 1rem;
-        }
+    .time {
+      font-size: 2rem;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+      margin-top: 1rem;
+    }
 
-        .sun, .moon {
-            position: absolute;
-            border-radius: 50%;
-            transition: transform 3s ease-in-out;
-        }
+    .sun, .moon {
+      position: absolute;
+      border-radius: 50%;
+      transition: transform 1s linear;
+    }
 
-        .sun {
-            width: 100px;
-            height: 100px;
-            background: #FFD700;
-            box-shadow: 0 0 50px 20px rgba(255, 215, 0, 0.7);
-        }
+    .sun {
+      width: 100px;
+      height: 100px;
+      background: #FFD700;
+      box-shadow: 0 0 50px 20px rgba(255, 215, 0, 0.7);
+    }
 
-        .moon {
-            width: 80px;
-            height: 80px;
-            background: #F5F5F5;
-            box-shadow: 0 0 30px 10px rgba(245, 245, 245, 0.5);
-        }
-        
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 3s ease;
-        }
-        
-        .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
-        }
-        
-        @keyframes twinkle {
-            0% { opacity: 0.2; }
-            100% { opacity: 0.8; }
-        }
-        
-        .clouds {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 3s ease;
-        }
-        
-        .cloud {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50px;
-            width: 200px;
-            height: 60px;
-            animation-name: float;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            animation-duration: 30s;
-        }
-        
-        .cloud:before, .cloud:after {
-            content: '';
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-        }
-        
-        .cloud:before {
-            width: 80px;
-            height: 80px;
-            top: -30px;
-            left: 30px;
-        }
-        
-        .cloud:after {
-            width: 100px;
-            height: 100px;
-            top: -40px;
-            right: 30px;
-        }
-        
-        @keyframes float {
-            0% { transform: translateX(-300px); }
-            100% { transform: translateX(calc(100vw + 300px)); }
-        }
-        
-        .date-info {
-            font-size: 1.2rem;
-            color: #fff;
-            text-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-            margin-top: 0.5rem;
-        }
-    </style>
+    .moon {
+      width: 80px;
+      height: 80px;
+      background: #F5F5F5;
+      box-shadow: 0 0 30px 10px rgba(245, 245, 245, 0.5);
+    }
+    
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 3s ease;
+    }
+    
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle 2s infinite alternate;
+    }
+    
+    @keyframes twinkle {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.8; }
+    }
+    
+    .clouds {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 3s ease;
+    }
+    
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50px;
+      width: 200px;
+      height: 60px;
+      /* Animasyon parametreleri script tarafından atanacak */
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    
+    .cloud:before, .cloud:after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+    }
+    
+    .cloud:before {
+      width: 80px;
+      height: 80px;
+      top: -30px;
+      left: 30px;
+    }
+    
+    .cloud:after {
+      width: 100px;
+      height: 100px;
+      top: -40px;
+      right: 30px;
+    }
+    
+    /* Animasyon: Bulutlar soldan sağa */
+    @keyframes floatRight {
+      0% { transform: translateX(-300px); }
+      100% { transform: translateX(calc(100vw + 300px)); }
+    }
+    
+    /* Animasyon: Bulutlar sağdan sola */
+    @keyframes floatLeft {
+      0% { transform: translateX(300px); }
+      100% { transform: translateX(calc(-100vw - 300px)); }
+    }
+    
+    .date-info {
+      font-size: 1.2rem;
+      color: #fff;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="message" id="greeting"></div>
-        <div class="time" id="clock">00:00:00</div>
-        <div class="date-info" id="date-info"></div>
-    </div>
+  <div class="container">
+    <div class="message" id="greeting"></div>
+    <div class="time" id="clock">00:00:00</div>
+    <div class="date-info" id="date-info"></div>
+  </div>
+  
+  <div class="sun" id="sun"></div>
+  <div class="moon" id="moon"></div>
+  <div class="stars" id="stars"></div>
+  <div class="clouds" id="clouds"></div>
+
+  <script>
+    // Elementleri seçme
+    const body = document.body;
+    const greetingElement = document.getElementById('greeting');
+    const clockElement = document.getElementById('clock');
+    const dateInfoElement = document.getElementById('date-info');
+    const sunElement = document.getElementById('sun');
+    const moonElement = document.getElementById('moon');
+    const starsElement = document.getElementById('stars');
+    const cloudsElement = document.getElementById('clouds');
     
-    <div class="sun" id="sun"></div>
-    <div class="moon" id="moon"></div>
-    <div class="stars" id="stars"></div>
-    <div class="clouds" id="clouds"></div>
-
-    <script>
-        // Elementleri seçme
-        const body = document.body;
-        const greetingElement = document.getElementById('greeting');
-        const clockElement = document.getElementById('clock');
-        const dateInfoElement = document.getElementById('date-info');
-        const sunElement = document.getElementById('sun');
-        const moonElement = document.getElementById('moon');
-        const starsElement = document.getElementById('stars');
-        const cloudsElement = document.getElementById('clouds');
+    // Durumları takip etmek için değişkenler
+    let isDay = true;
+    let isSunriseShown = false;
+    let isSunsetShown = false;
+    
+    // Yıldızları oluştur
+    function createStars() {
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.width = `${Math.random() * 3 + 1}px`;
+        star.style.height = star.style.width;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 2}s`;
+        starsElement.appendChild(star);
+      }
+    }
+    
+    // Bulutları oluştur (rastgele yön belirleniyor)
+    function createClouds() {
+      cloudsElement.innerHTML = ''; // Mevcut bulutları temizle
+      
+      for (let i = 0; i < 5; i++) {
+        const cloud = document.createElement('div');
+        cloud.classList.add('cloud');
+        cloud.style.top = `${Math.random() * 30 + 10}%`;
         
-        // Durumları takip etmek için değişkenler
-        let isDay = true;
-        let isSunriseShown = false;
-        let isSunsetShown = false;
-        
-        // Yıldızları oluştur
-        function createStars() {
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                star.style.width = `${Math.random() * 3 + 1}px`;
-                star.style.height = star.style.width;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 2}s`;
-                starsElement.appendChild(star);
-            }
-        }
-        
-        // Bulutları oluştur
-        function createClouds() {
-            cloudsElement.innerHTML = ''; // Mevcut bulutları temizle
-            
-            for (let i = 0; i < 5; i++) {
-                const cloud = document.createElement('div');
-                cloud.classList.add('cloud');
-                cloud.style.top = `${Math.random() * 30 + 10}%`;
-                
-                // Başlangıç pozisyonunu ekranın rastgele bir yerinde ayarla
-                const startPosition = Math.random() * window.innerWidth;
-                cloud.style.left = `${startPosition}px`;
-                
-                // Animasyon süresini ayarla
-                const duration = Math.random() * 20 + 30;
-                cloud.style.animationDuration = `${duration}s`;
-                
-                // Farklı başlangıç pozisyonları için animasyon gecikmesi
-                const animationDelay = -Math.random() * duration;
-                cloud.style.animationDelay = `${animationDelay}s`;
-                
-                cloud.style.opacity = Math.random() * 0.4 + 0.4;
-                cloud.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
-                
-                cloudsElement.appendChild(cloud);
-            }
-        }
-        
-        // Güneş ve ay pozisyonlarını güncelleme
-        function updateCelestialBodies(hours, minutes) {
-            const totalMinutes = hours * 60 + minutes;
-            
-            // İstanbul için ortalama gün doğumu ve gün batımı saatleri
-            const sunriseHour = getSunriseHour();
-            const sunsetHour = getSunsetHour();
-            const moonriseHour = (sunsetHour + 0.5) % 24; // Gün batımından yaklaşık 30 dk sonra
-            const moonsetHour = (sunriseHour - 0.5 + 24) % 24; // Gün doğumundan yaklaşık 30 dk önce
-            
-            const sunriseMinutes = sunriseHour * 60;
-            const sunsetMinutes = sunsetHour * 60;
-            const moonriseMinutes = moonriseHour * 60;
-            const moonsetMinutes = moonsetHour * 60;
-            
-            // Ekran genişliğini al
-            const screenWidth = window.innerWidth;
-            
-            // Gündüz mü gece mi kontrol et
-            if (totalMinutes >= sunriseMinutes && totalMinutes < sunsetMinutes) {
-                isDay = true;
-                
-                // Güneşin pozisyonunu güncelle
-                const dayProgress = (totalMinutes - sunriseMinutes) / (sunsetMinutes - sunriseMinutes);
-                const sunX = dayProgress * (screenWidth + 200) - 100;
-                const sunY = 75 - Math.sin(dayProgress * Math.PI) * 65;
-                
-                sunElement.style.transform = `translate(${sunX}px, ${sunY}vh)`;
-                
-                // Ay gündüz görünmez
-                moonElement.style.transform = `translate(${-200}px, 75vh)`;
-                
-                // Arka plan rengini güncelle - gündüz
-                const skyColor = dayProgress < 0.2 ? 
-                    `linear-gradient(to bottom, #FF9E80, #FFCC80, #B3E5FC)` : // Gün doğumu
-                    dayProgress > 0.8 ? 
-                    `linear-gradient(to bottom, #FF9E80, #FFCC80, #B3E5FC)` : // Gün batımı
-                    `linear-gradient(to bottom, #87CEEB, #E0F7FA)`; // Normal gündüz
-                
-                body.style.background = skyColor;
-                
-                // Yıldızları gizle, bulutları göster
-                starsElement.style.opacity = 0;
-                cloudsElement.style.opacity = 1;
-                
-                // Günaydın mesajını güncelle
-                if (dayProgress < 0.1 && !isSunriseShown) {
-                    updateGreeting("Günaydınnn ablamm");
-                    isSunriseShown = true;
-                    isSunsetShown = false;
-                } else if (dayProgress > 0.9 && !isSunsetShown) {
-                    updateGreeting("İyi Akşamlar");
-                    isSunsetShown = true;
-                }
-            } else {
-                isDay = false;
-                
-                // Ay pozisyonunu güncelle
-                let nightProgress;
-                
-                if (totalMinutes < sunriseMinutes) {
-                    // Gece yarısından sonra güneş doğumuna kadar
-                    nightProgress = totalMinutes / sunriseMinutes;
-                } else {
-                    // Gün batımından gece yarısına kadar
-                    nightProgress = (totalMinutes - sunsetMinutes) / (24 * 60 - sunsetMinutes + sunriseMinutes);
-                }
-                
-                const moonX = nightProgress * (screenWidth + 200) - 100;
-                const moonY = 75 - Math.sin(nightProgress * Math.PI) * 65;
-                
-                moonElement.style.transform = `translate(${moonX}px, ${moonY}vh)`;
-                
-                // Güneş gece görünmez
-                sunElement.style.transform = `translate(${-200}px, 75vh)`;
-                
-                // Arka plan rengini güncelle - gece
-                const skyColor = nightProgress < 0.1 || nightProgress > 0.9 ?
-                    `linear-gradient(to bottom, #2c3e50, #34495e, #4a5568)` : // Alacakaranlık
-                    `linear-gradient(to bottom, #0D1C30, #1F3A60, #2C3E50)`; // Derin gece
-                
-                body.style.background = skyColor;
-                
-                // Yıldızları göster, bulutları az göster
-                starsElement.style.opacity = 1;
-                cloudsElement.style.opacity = 0.3;
-                
-                // İyi geceler mesajını güncelle
-                if (nightProgress < 0.1 && isSunsetShown) {
-                    updateGreeting("İyi gecelerr Tatlı rüyalarrr");
-                    isSunsetShown = false;
-                    isSunriseShown = false;
-                }
-            }
-        }
-        
-        // Mevsime göre ortalama gün doğumu saati tahmini
-        function getSunriseHour() {
-            const now = new Date();
-            const month = now.getMonth(); // 0-11 arası
-
-            // Mevsime göre yaklaşık gün doğumu saatleri (İstanbul için)
-            if (month >= 2 && month <= 4) return 6; // İlkbahar
-            if (month >= 5 && month <= 7) return 5.5; // Yaz
-            if (month >= 8 && month <= 10) return 6.5; // Sonbahar
-            return 7; // Kış
-        }
-        
-        // Mevsime göre ortalama gün batımı saati tahmini
-        function getSunsetHour() {
-            const now = new Date();
-            const month = now.getMonth(); // 0-11 arası
-
-            // Mevsime göre yaklaşık gün batımı saatleri (İstanbul için)
-            if (month >= 2 && month <= 4) return 19; // İlkbahar
-            if (month >= 5 && month <= 7) return 20.5; // Yaz
-            if (month >= 8 && month <= 10) return 18; // Sonbahar
-            return 17; // Kış
-        }
-        
-        // Selamlamayı güncelleme
-        function updateGreeting(message) {
-            greetingElement.classList.remove('visible');
-            setTimeout(() => {
-                greetingElement.textContent = message;
-                greetingElement.classList.add('visible');
-            }, 1000);
-        }
-        
-        // Saat ve tarih bilgisini güncelleme
-        function updateClock() {
-            const now = new Date();
-            
-            // İstanbul saati için timezone offset
-            const istanbulTime = new Date(now.getTime() + (3 * 60 + now.getTimezoneOffset()) * 60000);
-            
-            const hours = istanbulTime.getHours();
-            const minutes = istanbulTime.getMinutes();
-            const seconds = istanbulTime.getSeconds();
-            
-            // Saat formatı
-            const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            clockElement.textContent = timeString;
-            
-            // Tarih formatı
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = istanbulTime.toLocaleDateString('tr-TR', options);
-            dateInfoElement.textContent = dateString;
-            
-            // Güneş ve ay pozisyonlarını güncelle
-            updateCelestialBodies(hours, minutes);
-        }
-        
-        // Sayfa ilk yüklendiğinde doğru mesajı göster
-        const initialTime = new Date();
-        const istanbulInitialTime = new Date(initialTime.getTime() + (3 * 60 + initialTime.getTimezoneOffset()) * 60000);
-        const initialHours = istanbulInitialTime.getHours();
-
-        // Gün doğumu ve batımı saatlerini al
-        const sunriseHour = getSunriseHour();
-        const sunsetHour = getSunsetHour();
-
-        // Saat gündüz mü gece mi kontrol et ve uygun mesajı göster
-        if (initialHours >= sunriseHour && initialHours < sunsetHour) {
-            greetingElement.textContent = "Günaydınnn ablamm";
+        // Rastgele yön belirle: %50 ihtimalle soldan sağa, %50 sağdan sola
+        const direction = Math.random() < 0.5 ? 'right' : 'left';
+        if (direction === 'right') {
+          cloud.style.left = '-300px';
+          cloud.style.animationName = 'floatRight';
         } else {
-            greetingElement.textContent = "İyi gecelerr Tatlı rüyalarrr";
+          cloud.style.left = 'calc(100vw + 300px)';
+          cloud.style.animationName = 'floatLeft';
         }
         
-        // İlk çalıştırma
-        createStars();
-        createClouds();
+        // Animasyon süresini ayarla
+        const duration = Math.random() * 20 + 30;
+        cloud.style.animationDuration = `${duration}s`;
         
-        // İlk yükleme: güneş ve ay pozisyonlarını anında ayarla
-        updateCelestialBodies(istanbulInitialTime.getHours(), istanbulInitialTime.getMinutes());
-        updateClock();
+        // Farklı başlangıç pozisyonları için animasyon gecikmesi
+        const animationDelay = -Math.random() * duration;
+        cloud.style.animationDelay = `${animationDelay}s`;
         
-        // Başlangıç animasyonu
-        setTimeout(() => {
-            greetingElement.classList.add('visible');
-        }, 500);
+        cloud.style.opacity = Math.random() * 0.4 + 0.4;
+        cloud.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
         
-        // Her saniye güncelleme
-        setInterval(updateClock, 1000);
+        cloudsElement.appendChild(cloud);
+      }
+    }
+    
+    // Mevsime göre ortalama gün doğumu saati tahmini
+    function getSunriseHour() {
+      const now = new Date();
+      const month = now.getMonth(); // 0-11 arası
+
+      // Mevsime göre yaklaşık gün doğumu saatleri (İstanbul için)
+      if (month >= 2 && month <= 4) return 6; // İlkbahar
+      if (month >= 5 && month <= 7) return 5.5; // Yaz
+      if (month >= 8 && month <= 10) return 6.5; // Sonbahar
+      return 7; // Kış
+    }
+    
+    // Mevsime göre ortalama gün batımı saati tahmini
+    function getSunsetHour() {
+      const now = new Date();
+      const month = now.getMonth(); // 0-11 arası
+
+      // Mevsime göre yaklaşık gün batımı saatleri (İstanbul için)
+      if (month >= 2 && month <= 4) return 19; // İlkbahar
+      if (month >= 5 && month <= 7) return 20.5; // Yaz
+      if (month >= 8 && month <= 10) return 18; // Sonbahar
+      return 17; // Kış
+    }
+    
+    // Güneş ve ay pozisyonlarını güncelleme
+    function updateCelestialBodies(hours, minutes, seconds) {
+      // Zamanı toplam saniye olarak hesapla (daha pürüzsüz hareket için)
+      const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+      // Toplam saniyeyi dakika cinsinden hesapla (daha esnek hesaplama için)
+      const totalMinutes = totalSeconds / 60;
+      
+      // İstanbul için ortalama gün doğumu ve gün batımı saatleri
+      const sunriseHour = getSunriseHour();
+      const sunsetHour = getSunsetHour();
+      
+      const sunriseMinutes = sunriseHour * 60;
+      const sunsetMinutes = sunsetHour * 60;
+      
+      // Gün uzunluğu ve gece uzunluğu hesaplama (dakika cinsinden)
+      const dayLength = sunsetMinutes - sunriseMinutes;
+      const nightLength = 1440 - dayLength; // 24 saat = 1440 dakika
+      
+      // Ekran genişliğini al
+      const screenWidth = window.innerWidth;
+      
+      // Gündüz mü gece mi kontrol et
+      if (totalMinutes >= sunriseMinutes && totalMinutes < sunsetMinutes) {
+        isDay = true;
         
-        // Pencere yeniden boyutlandığında güneş/ay pozisyonlarını ve bulutları güncelle
-        window.addEventListener('resize', () => {
-            createClouds(); // Bulutları yeniden oluştur
-            const now = new Date();
-            const istanbulTime = new Date(now.getTime() + (3 * 60 + now.getTimezoneOffset()) * 60000);
-            updateCelestialBodies(istanbulTime.getHours(), istanbulTime.getMinutes());
-        });
-    </script>
+        // Güneşin pozisyonunu güncelle - saniye hassasiyetinde
+        const dayProgress = (totalMinutes - sunriseMinutes) / dayLength;
+        const sunX = dayProgress * (screenWidth + 200) - 100;
+        const sunY = 75 - Math.sin(dayProgress * Math.PI) * 65;
+        
+        sunElement.style.transform = `translate(${sunX}px, ${sunY}vh)`;
+        
+        // Ay gündüz görünmez - ekranın dışında beklet
+        moonElement.style.transform = `translate(${-200}px, 75vh)`;
+        
+        // Arka plan rengini güncelle - gündüz
+        const skyColor = dayProgress < 0.2 ? 
+            `linear-gradient(to bottom, #FF9E80, #FFCC80, #B3E5FC)` : // Gün doğumu
+            dayProgress > 0.8 ? 
+            `linear-gradient(to bottom, #FF9E80, #FFCC80, #B3E5FC)` : // Gün batımı
+            `linear-gradient(to bottom, #87CEEB, #E0F7FA)`; // Normal gündüz
+        
+        body.style.background = skyColor;
+        
+        // Yıldızları gizle, bulutları göster
+        starsElement.style.opacity = 0;
+        cloudsElement.style.opacity = 1;
+        
+        // Günaydın mesajını güncelle
+        if (dayProgress < 0.1 && !isSunriseShown) {
+          updateGreeting("Günaydınnn ablamm");
+          isSunriseShown = true;
+          isSunsetShown = false;
+        } else if (dayProgress > 0.9 && !isSunsetShown) {
+          updateGreeting("İyi Akşamlar");
+          isSunsetShown = true;
+        }
+      } else {
+        isDay = false;
+        
+        // Ayın pozisyonunu hesapla
+        let nightFraction;
+        if (totalMinutes >= sunsetMinutes) {
+          nightFraction = (totalMinutes - sunsetMinutes) / nightLength;
+        } else {
+          nightFraction = (totalMinutes + (1440 - sunsetMinutes)) / nightLength;
+        }
+        
+        const moonX = nightFraction * (screenWidth + 200) - 100;
+        const moonY = 75 - Math.sin(nightFraction * Math.PI) * 65;
+        
+        moonElement.style.transform = `translate(${moonX}px, ${moonY}vh)`;
+        
+        // Güneşi ekran dışında beklet
+        sunElement.style.transform = `translate(${-200}px, 75vh)`;
+        
+        // Gece arka plan rengini güncelle
+        const skyColor = (nightFraction < 0.1 || nightFraction > 0.9) ?
+            `linear-gradient(to bottom, #2c3e50, #34495e, #4a5568)` : // Alacakaranlık
+            `linear-gradient(to bottom, #0D1C30, #1F3A60, #2C3E50)`; // Derin gece
+        
+        body.style.background = skyColor;
+        
+        // Yıldızları göster, bulutları hafif göster
+        starsElement.style.opacity = 1;
+        cloudsElement.style.opacity = 0.3;
+        
+        if (nightFraction < 0.1 && isSunsetShown) {
+          updateGreeting("İyi gecelerr Tatlı rüyalarrr");
+          isSunsetShown = false;
+          isSunriseShown = false;
+        }
+      }
+    }
+    
+    // Selamlamayı güncelleme
+    function updateGreeting(message) {
+      greetingElement.classList.remove('visible');
+      setTimeout(() => {
+        greetingElement.textContent = message;
+        greetingElement.classList.add('visible');
+      }, 1000);
+    }
+    
+    // Saat ve tarih bilgisini güncelleme
+    function updateClock() {
+      const now = new Date();
+      const istanbulTime = new Date(now.getTime() + (3 * 60 + now.getTimezoneOffset()) * 60000);
+      
+      const hours = istanbulTime.getHours();
+      const minutes = istanbulTime.getMinutes();
+      const seconds = istanbulTime.getSeconds();
+      
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      clockElement.textContent = timeString;
+      
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateString = istanbulTime.toLocaleDateString('tr-TR', options);
+      dateInfoElement.textContent = dateString;
+      
+      updateCelestialBodies(hours, minutes, seconds);
+    }
+    
+    // Sayfa ilk yüklendiğinde doğru mesajı göster
+    const initialTime = new Date();
+    const istanbulInitialTime = new Date(initialTime.getTime() + (3 * 60 + initialTime.getTimezoneOffset()) * 60000);
+    const initialHours = istanbulInitialTime.getHours();
+    const sunriseHour = getSunriseHour();
+    const sunsetHour = getSunsetHour();
+    
+    if (initialHours >= sunriseHour && initialHours < sunsetHour) {
+      greetingElement.textContent = "Günaydınnn ablamm";
+    } else {
+      greetingElement.textContent = "İyi gecelerr Tatlı rüyalarrr";
+    }
+    
+    // İlk çalıştırma
+    createStars();
+    createClouds();
+    updateCelestialBodies(
+      istanbulInitialTime.getHours(), 
+      istanbulInitialTime.getMinutes(), 
+      istanbulInitialTime.getSeconds()
+    );
+    updateClock();
+    
+    setTimeout(() => {
+      greetingElement.classList.add('visible');
+    }, 500);
+    
+    setInterval(updateClock, 1000);
+    
+    window.addEventListener('resize', () => {
+      createClouds();
+      const now = new Date();
+      const istanbulTime = new Date(now.getTime() + (3 * 60 + now.getTimezoneOffset()) * 60000);
+      updateCelestialBodies(
+        istanbulTime.getHours(), 
+        istanbulTime.getMinutes(), 
+        istanbulTime.getSeconds()
+      );
+    });
+  </script>
 </body>
 </html>
